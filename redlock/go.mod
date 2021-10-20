@@ -1,4 +1,4 @@
-module redlock
+module github.com/monotykamary/golang-self-learn/redlock
 
 go 1.17
 
