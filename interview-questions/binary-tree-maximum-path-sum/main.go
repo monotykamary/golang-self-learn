@@ -44,7 +44,7 @@ func printRoot(root *TreeNode) interface{} {
 	left := printRoot(root.left)
 	right := printRoot(root.right)
 
-	var rootSlice []interface{} = []interface{}{value, left, right}
+	rootSlice := []interface{}{value, left, right}
 	return rootSlice
 }
 
