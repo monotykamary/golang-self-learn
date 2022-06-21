@@ -5,44 +5,65 @@ import (
 	"math"
 )
 
-var max float64
-
+/*
+	Create a tree node that can refer to other tree nodes as left or right.
+*/
 type TreeNode struct {
 	value float64
 	left  *TreeNode
 	right *TreeNode
 }
 
+/*
+	Create a factory function to create our TreeNodes.
+*/
 func newTreeNode(value float64, left *TreeNode, right *TreeNode) *TreeNode {
 	return &TreeNode{value, left, right}
 }
 
-func maxPathSum(root *TreeNode) float64 {
-	max = math.Inf(-1)
-	postOrder(root)
-	return max
+/*
+	Create an object to store our maxPath data for each tree we calculate.
+*/
+type TreeData struct {
+	maxPath float64
 }
 
-func postOrder(root *TreeNode) float64 {
+/*
+	Calculate the max path sum by using using our post order function to mutate
+	the maxPath variable.
+*/
+func (t *TreeData) MaxPathSum(root *TreeNode) float64 {
+	t.PostOrder(root)
+	return t.maxPath
+}
+
+/*
+	Create a post order recursive function to check the maximum length as we
+	traverse the tree recursively.
+*/
+func (t *TreeData) PostOrder(root *TreeNode) float64 {
 	if root == nil {
 		return 0
 	}
 
-	left := math.Max(postOrder(root.left), 0)
-	right := math.Max(postOrder(root.right), 0)
+	left := math.Max(t.PostOrder(root.left), 0)
+	right := math.Max(t.PostOrder(root.right), 0)
 
-	max = math.Max(max, left+right+root.value)
+	t.maxPath = math.Max(t.maxPath, left+right+root.value)
 	return math.Max(left, right) + root.value
 }
 
-func printRoot(root *TreeNode) interface{} {
+/*
+	Create a utility function to print our tree recursively.
+*/
+func (t *TreeData) PrintRoot(root *TreeNode) interface{} {
 	if root == nil {
 		return nil
 	}
 
 	value := root.value
-	left := printRoot(root.left)
-	right := printRoot(root.right)
+	left := t.PrintRoot(root.left)
+	right := t.PrintRoot(root.right)
 
 	rootSlice := []interface{}{value, left, right}
 	return rootSlice
@@ -59,9 +80,12 @@ func main() {
 		),
 	)
 
-	fmt.Printf("Input: root = %v\n", printRoot(root1))
-	fmt.Printf("Output: %v\n", maxPathSum(root1))
+	tree1Data := TreeData{}
+	tree2Data := TreeData{}
 
-	fmt.Printf("Input: root = %v\n", printRoot(root2))
-	fmt.Printf("Output: %v\n", maxPathSum(root2))
+	fmt.Printf("Input: root = %v\n", tree1Data.PrintRoot(root1))
+	fmt.Printf("Output: %v\n", tree1Data.MaxPathSum(root1))
+
+	fmt.Printf("Input: root = %v\n", tree2Data.PrintRoot(root2))
+	fmt.Printf("Output: %v\n", tree2Data.MaxPathSum(root2))
 }
